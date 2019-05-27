@@ -91,20 +91,20 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.source_files  = "Classes/*.h"
+  s.source_files  = "Classes/Library.h", "Classes/Macro.h"
   # s.exclude_files = "Classes/Exclude"
 
-  s.public_header_files = "Classes/*.h"
+  s.public_header_files = "Classes/Library.h", "Classes/Macro.h"
 
   s.subspec 'Category' do |ss|
     ss.source_files = 'Classes/Category/*'
-    ss.public_header_files = 'Classes/Category/*.h'
+    ss.public_header_files = 'Classes/Category/Category.h'
     ss.frameworks = 'Category'
   end
 
   s.subspec 'WFLibrary' do |ss|
     ss.source_files = 'Classes/WFLibrary/**/*'
-    ss.public_header_files = 'Classes/WFLibrary/*.h'
+    ss.public_header_files = 'Classes/WFLibrary/WFLibrary.h'
     ss.frameworks = 'WFLibrary'
   end
 
