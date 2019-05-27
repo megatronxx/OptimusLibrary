@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "OptimusLibrary"
-  s.version      = "0.0.4"
+  s.version      = "0.0.5"
   s.summary      = "general library"
 
   # This description is used to generate tags and improve search results.
