@@ -97,12 +97,14 @@ Pod::Spec.new do |s|
   s.public_header_files = "Classes/Library.h", "Classes/Macro.h"
 
   s.subspec 'Category' do |ss|
+    ss.dependency = "Classes/Library.h", "Classes/Macro.h"
     ss.source_files = 'Classes/Category/*'
     ss.public_header_files = 'Classes/Category/Category.h'
     ss.frameworks = 'Category'
   end
 
   s.subspec 'WFLibrary' do |ss|
+    ss.dependency = "Classes/Library.h", "Classes/Macro.h"
     ss.source_files = 'Classes/WFLibrary/**/*'
     ss.public_header_files = 'Classes/WFLibrary/WFLibrary.h'
     ss.frameworks = 'WFLibrary'
