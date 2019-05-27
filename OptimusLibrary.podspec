@@ -98,13 +98,13 @@ Pod::Spec.new do |s|
 
   s.subspec 'Category' do |ss|
     ss.source_files = 'Classes/Category/*'
-    ss.public_header_files = 'Classes/Category/Category.h'
+    ss.public_header_files = 'Classes/Category/*.h'
     ss.frameworks = 'Category'
   end
 
   s.subspec 'WFLibrary' do |ss|
     ss.source_files = 'Classes/WFLibrary/**/*'
-    ss.public_header_files = 'Classes/WFLibrary/WFLibrary.h'
+    ss.public_header_files = 'Classes/WFLibrary/*.h'
     ss.frameworks = 'WFLibrary'
   end
 
