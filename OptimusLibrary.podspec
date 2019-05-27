@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "OptimusLibrary"
-  s.version      = "0.0.2"
+  s.version      = "0.0.3"
   s.summary      = "general library"
 
   # This description is used to generate tags and improve search results.
@@ -91,11 +91,22 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.source_files  = "Classes/**/*"
+  s.source_files  = "Classes/*.h"
   # s.exclude_files = "Classes/Exclude"
 
   # s.public_header_files = "Classes/**/*.h"
 
+  s.subspec 'Category' do |ss|
+    ss.source_files = 'Classes/Category/*'
+    ss.public_header_files = 'Classes/Category/Category.h'
+    ss.frameworks = 'Category'
+  end
+
+  s.subspec 'WFLibrary' do |ss|
+    ss.source_files = 'Classes/WFLibrary/**/*'
+    ss.public_header_files = 'Classes/WFLibrary/WFLibrary.h'
+    ss.frameworks = 'WFLibrary'
+  end
 
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
