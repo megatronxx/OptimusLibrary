@@ -10,7 +10,6 @@
 #import "WFRequest.h"
 #import "CacheGroup.h"
 #import "WFFunctions.h"
-#import "Pods.h"
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 
