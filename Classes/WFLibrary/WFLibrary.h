@@ -21,8 +21,4 @@
 #import "WFPassView.h"
 //
 #import "CacheGroup.h"
-//心跳监测
-#import "WFHeartBits.h"
-//滤波器
-#import "ButtordFliter.h"
 #endif /* WFLibrary_h */
