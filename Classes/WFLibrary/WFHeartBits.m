@@ -168,6 +168,16 @@ static float T = 10;
 - (void)analysisPointsWith:(NSDictionary *)point {
     
     [self.points addObject:point];
+    float values[self.points.count];
+    for (NSInteger i = 0; i < self.points.count; i++) {
+        NSDictionary *dic = self.points[i];
+        if ([dic isKindOfClass:[NSDictionary class]]) {
+            NSNumber *num = [dic allValues][0];
+            values[i] = num.floatValue;
+        }
+    }
+    [self fliter:values];
+    
     if (self.points.count<=30) return;
     int count = (int)self.points.count;
     
@@ -455,7 +465,7 @@ BOOL isStatble(float low)
     // 返回处理后的浮点值
     float p = HeartRate(h);
     BOOL isStable = isStatble(p);
-    NSLog(@"");
+    
     p = isCover ? p : 0.0;
     // 绑定浮点和时间戳
     NSDictionary *point = @{[NSNumber numberWithDouble:t]:[NSNumber numberWithFloat:p]};
@@ -463,6 +473,7 @@ BOOL isStatble(float low)
                              [NSString stringWithFormat:@"%@",[NSNumber numberWithDouble:t]]:[NSNumber numberWithFloat:p]
                              };
     [self.pointDatas addObject:pointc];
+    
     // Block回调方法
     if (self.backPoint)
         self.backPoint(point);
@@ -483,37 +494,40 @@ BOOL isStatble(float low)
     }
     
     return;
+}
+
+//带通滤波
+-(void)fliter:(float *)xVector3
+{
+    //------------------------------------------------------------------------------------------
+    // 3.带通滤波器
+    //
+    // 通带截止频率：passF = [15000 40000]Hz，阻带截止频率：stopF = [10000 48000]Hz，抽样频率：fs = 100000Hz
+    // 通带衰减：rp = 2dB，阻带衰减：rs = 30dB
+    //------------------------------------------------------------------------------------------
     
-    // 范围之内
-//    if (isCover) {
-//        if (is_wait) return;
-//        // Block回调方法
-//        if (self.backPoint)
-//            self.backPoint(point);
-//        // 代理回调方法
-//        if ([self.delegate respondsToSelector:@selector(startHeartDelegateRatePoint:)])
-//            [self.delegate startHeartDelegateRatePoint:point];
-//        // 分析波峰波谷
-//        [self analysisPointsWith:point];
-//    } else {
-//        //范围之外或不稳定
-//        if (is_wait) return;
-//        NSString *errStr = @"请将手指覆盖住后置摄像头和闪光灯，并保持稳定";
-//        NSError *err = [NSError errorWithDomain: errStr code:101 userInfo:@{@"content":errStr}];
-//        if (self.Error)
-//            self.Error(err);
-//        if ([self.delegate respondsToSelector:@selector(startHeartDelegateRateError:)])
-//            [self.delegate startHeartDelegateRateError:err];
-//        
-//        // 清除数据
-//        count = 0;
-//        lastH = 0;
-//        [self.points removeAllObjects];
-//        is_wait = YES;
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(wait_t * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            is_wait = NO;
-//        });
-//    }
+    float passF3[2] = {40.0, 160.0}, stopF3[2] = {10.0, 480.0}, fs3 = 100, rp3 = 2, rs3 = 30;    //数字滤波器性能
+    NSInteger length = self.points.count;
+    float yVector3[length];
+    
+    ButterFilterStruct fliter = [ButtordFliter filterIIRButterLowpass:passF3 andStopF:stopF3 andPassRipple:rp3 andStopRipple:rs3 andFs:fs3 andFilterType:FILTER_IIR_BUTTER_PASS];
+    float returnSb[fliter.N];
+    float numerator[fliter.length];
+    float denominator[fliter.length];
+    [ButtordFliter butterSbValue:fliter andReturnSb:returnSb];
+    [ButtordFliter butterPassOrStop:fliter andSb:returnSb andNumerator:numerator andDenominator:denominator];
+    [ButtordFliter filter:fliter andNumerator:numerator andDenominator:denominator andXVector:xVector3 andXLength:length andReturnY:yVector3];
+    
+    for(int i = 0; i < length; i++)
+    {
+        float value = yVector3[i];
+        NSDictionary *dic = self.points[i];
+        if ([dic isKindOfClass:[NSDictionary class]]) {
+            NSString *key = dic.allKeys[0];
+            NSDictionary *dict = @{key:[NSNumber numberWithFloat:value]};
+            self.points[i] = dict;
+        }
+    }
 }
 
 #pragma mark - getter and setter
@@ -535,7 +549,7 @@ BOOL isStatble(float low)
 {
     if (!_monitorTestTimer) {
         CGFloat dur = 0.1;
-//        _monitorTestTimer = [NSTimer scheduledTimerWithTimeInterval:dur target:self selector:@selector(monitorTestTimerTick:) userInfo:nil repeats:YES];
+        //        _monitorTestTimer = [NSTimer scheduledTimerWithTimeInterval:dur target:self selector:@selector(monitorTestTimerTick:) userInfo:nil repeats:YES];
         _monitorTestTimer = [NSTimer timerWithTimeInterval:dur target:self selector:@selector(monitorTestTimerTick:) userInfo:nil repeats:YES];
         [_monitorTestTimer setFireDate:[NSDate distantFuture]];
         [[NSRunLoop mainRunLoop] addTimer:_monitorTestTimer forMode:NSRunLoopCommonModes];
@@ -569,7 +583,7 @@ static CGFloat grid_w = 30.0f;
         values[i] = num.floatValue;
     }
     
-//    [self fliter:values];
+    [self fliter:values];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         // 这个方法自动调取 drawRect:方法
@@ -586,7 +600,7 @@ static CGFloat grid_w = 30.0f;
     // 通带衰减：rp = 2dB，阻带衰减：rs = 30dB
     //------------------------------------------------------------------------------------------
     
-    float passF3[2] = {15000.0, 40000.0}, stopF3[2] = {10000.0, 48000.0}, fs3 = 100000, rp3 = 2, rs3 = 30;    //数字滤波器性能
+    float passF3[2] = {40.0, 160.0}, stopF3[2] = {10.0, 480.0}, fs3 = 100, rp3 = 2, rs3 = 30;    //数字滤波器性能
     NSInteger length = self.points.count;
     float yVector3[length];
     
