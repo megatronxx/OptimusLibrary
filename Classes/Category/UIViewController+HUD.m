@@ -38,7 +38,7 @@ static const void *HttpRequestHUDKey = &HttpRequestHUDKey;
         _validateTypeLB.backgroundColor = RGBACOLOR(0, 0, 0, 0.3);
         _validateTypeLB.frame = WFCGRectMake(0, -15, 320, 20);
         _validateTypeLB.textColor = RGBACOLOR(208, 48, 72, 1);
-        _validateTypeLB.font = [UIFont systemFontOfSize:11 * autoSizeScaleY];
+        _validateTypeLB.font = [UIFont systemFontOfSize:11 * autoSizeScale];
         _validateTypeLB.textAlignment = NSTextAlignmentCenter;
         _validateTypeLB.tag = tipTag;
         [self.view addSubview:_validateTypeLB];
