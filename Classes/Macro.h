@@ -137,7 +137,7 @@ WFCGFloatX(CGFloat num) {
 }
 
 CG_INLINE CGFloat
-WFCGFloatX(CGFloat num) {
+WFCGFloatY(CGFloat num) {
     return WFSC(num);
 }
 
