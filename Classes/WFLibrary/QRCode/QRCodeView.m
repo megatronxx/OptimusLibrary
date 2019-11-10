@@ -76,12 +76,18 @@ static NSString *QRCodeKey;
             UIImageView *containIV = [[UIImageView alloc]init];
             CGRect rect = CGRectMake(WF_SCREEN_WIDTH / 2 - 110,WF_UI_VIEW_HEIGHT / 2 - 110,220,220);
             containIV.frame = rect;
-            containIV.image = [UIImage imageNamed:@"pick_bg"];
+            NSString *strResourcesBundle = [[NSBundle mainBundle] pathForResource:@"QRCodeResource" ofType:@"bundle"];
+            // 找到对应的图片
+            NSString *strPick = [[NSBundle bundleWithPath:strResourcesBundle] pathForResource:@"pick_bg" ofType:@"png"];
+            NSString *strLine = [[NSBundle bundleWithPath:strResourcesBundle] pathForResource:@"line" ofType:@"png"];
+            UIImage *imgPick = [UIImage imageWithContentsOfFile:strPick];
+            UIImage *imgLine = [UIImage imageWithContentsOfFile:strLine];
+            containIV.image = imgPick;
             [self addSubview:containIV];
             
             //扫描线
             scanLine = [[UIImageView alloc]initWithFrame:CGRectMake(WF_SCREEN_WIDTH / 2 - 110,WF_UI_VIEW_HEIGHT / 2 - 110,220,2)];
-            scanLine.image = [UIImage imageNamed:@"line"];
+            scanLine.image = imgLine;
             [self addSubview:scanLine];
             //定时器
             timer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(animate) userInfo:nil repeats:YES];

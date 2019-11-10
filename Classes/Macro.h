@@ -57,9 +57,9 @@ APP_VERSION, DeviceModel, DeviceSystemName, DeviceVersion, DeviceLocal, DeviceLa
 #define NSLog(FORMAT, ...)                      printf("%s\n", [[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
 
 ///系统font
-#define SYSTEMFONT(fon)                         [UIFont systemFontOfSize:fon withScale:autoSizeScaleY]
-#define SYSTEMBOLDFONT(fon)                     [UIFont boldSystemFontOfSize:fon withScale:autoSizeScaleY]
-#define SYSTEMNAMEFONT(name,fon)                [UIFont nameFont:name size:fon withScale:autoSizeScaleY]
+#define SYSTEMFONT(fon)                         [UIFont systemFontOfSize:fon withScale:autoSizeScale]
+#define SYSTEMBOLDFONT(fon)                     [UIFont boldSystemFontOfSize:fon withScale:autoSizeScale]
+#define SYSTEMNAMEFONT(name,fon)                [UIFont nameFont:name size:fon withScale:autoSizeScale]
 ///网络返回安全转换dic
 #define EncodeFormDic(dic,key)                  [dic[key] isKindOfClass:[NSString class]] ? dic[key] :([dic[key] isKindOfClass:[NSNumber class]] ? [dic[key] stringValue]:@"")
 ///若引用
@@ -115,46 +115,51 @@ observation.keyPath = WFKeypath(TARGET,KEYPATH);\
 
 #pragma mark - 按照iPhone 6的屏幕尺寸，等比缩放的适配方
 #define WH_Ration                               (CGFloat)(667.0f / 375.0f)
-#define Ration_Height                           (CGFloat)(WF_SCREEN_WIDTH * WH_Ration)
-#define autoSizeScaleX                          (CGFloat)WF_SCREEN_WIDTH / 375.0f
-#define autoSizeScaleY                          (isiPhoneX ? (CGFloat)Ration_Height : (CGFloat)WF_SCREEN_HEIGHT) / 667.0f
+#define autoSizeScale                           (CGFloat)WF_SCREEN_WIDTH / 375.0f
 
 CG_INLINE CGFloat
-WFCGFloatX(CGFloat num) {
-    CGFloat scalex = autoSizeScaleX;
-    CGFloat xnum = num * scalex;
+WFSC(CGFloat num) {
+    CGFloat scale = autoSizeScale;
+    CGFloat xnum = num * scale;
     return xnum;
 }
 
 CG_INLINE CGFloat
-WFCGFloatBackX(CGFloat num) {
-    CGFloat scalex = autoSizeScaleX;
+WFSCB(CGFloat num) {
+    CGFloat scalex = autoSizeScale;
     CGFloat xnum = num / scalex;
     return xnum;
 }
 
 CG_INLINE CGFloat
-WFCGFloatY(CGFloat num) {
-    CGFloat scaley = autoSizeScaleY;
-    CGFloat ynum = num * scaley;
-    return ynum;
+WFCGFloatX(CGFloat num) {
+    return WFSC(num);
 }
 
 CG_INLINE CGFloat
+WFCGFloatX(CGFloat num) {
+    return WFSC(num);
+}
+
+//WFCGFloatBackX
+CG_INLINE CGFloat
+WFCGFloatBackX(CGFloat num) {
+    return WFSCB(num);
+}
+
+//WFCGFloatBackY
+CG_INLINE CGFloat
 WFCGFloatBackY(CGFloat num) {
-    CGFloat scaley = autoSizeScaleY;
-    CGFloat ynum = num / scaley;
-    return ynum;
+    return WFSCB(num);
 }
 
 CG_INLINE CGSize
 WFCGSizeMake(CGFloat width, CGFloat height)
 {
     CGSize size;
-    CGFloat scalex = autoSizeScaleX;
-    CGFloat scaley = autoSizeScaleY;
-    CGFloat wwidth = width * scalex;
-    CGFloat hheight = height * scaley;
+    CGFloat scale = autoSizeScale;
+    CGFloat wwidth = width * scale;
+    CGFloat hheight = height * scale;
     size = CGSizeMake(wwidth, hheight);
     return size;
 }
@@ -163,23 +168,22 @@ CG_INLINE CGRect
 WFCGRectMake(CGFloat x, CGFloat y, CGFloat width, CGFloat height)
 {
     CGRect rect;
-    CGFloat scalex = autoSizeScaleX;
-    CGFloat scaley = autoSizeScaleY;
-    CGFloat xx = x * scalex;
-    CGFloat yy = y * scaley;
-    CGFloat wwidth = width * scalex;
-    CGFloat hheight = height * scaley;
+    CGFloat scale = autoSizeScale;
+    CGFloat xx = x * scale;
+    CGFloat yy = y * scale;
+    CGFloat wwidth = width * scale;
+    CGFloat hheight = height * scale;
     rect = CGRectMake(xx, yy, wwidth, hheight);
     return rect;
 }
+
 CG_INLINE CGPoint
 WFCGPointMake(CGFloat x, CGFloat y)
 {
     CGPoint point;
-    CGFloat scalex = autoSizeScaleX;
-    CGFloat scaley = autoSizeScaleY;
-    CGFloat xx = x * scalex;
-    CGFloat yy = y * scaley;
+    CGFloat scale = autoSizeScale;
+    CGFloat xx = x * scale;
+    CGFloat yy = y * scale;
     point = CGPointMake(xx, yy);
     return point;
 }
